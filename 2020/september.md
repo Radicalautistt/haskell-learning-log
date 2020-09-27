@@ -247,3 +247,27 @@ ghci> main
 ghci> <default.nix file contents>
 ```
 ___
+
+---
+date: 2020-09-28
+---
+
+### Combine several modules into one import
+```haskell
+module Project.Exports (module Monad) where
+
+import Control.Monad as Monad
+import Control.Monad.State.Strict as Monad
+import Control.Monad.Reader as Monad
+import Control.Monad.IO.Class as Monad
+import Control.Monad.Except as Monad
+
+{- 
+
+module Main where
+
+import Project.Exports (StateT (..), MonadReader (..), void)
+
+-}
+```
+___
