@@ -237,10 +237,11 @@ fileReader :: FileReader FilePath String
 fileReader =  do
   filePath <- ask @FilePath
   fileContents <- liftIO (readFile filePath)
+  put (length (lines fileContents))
   pure fileContents
   
 main :: IO ()
-main = print =<< runIdentityT (evalStateT (runReaderT (runFileReader fileReader) "default.nix") 0)
+main = print =<< runIdentityT (runStateT (runReaderT (runFileReader fileReader) "default.nix") 0)
 
 ghci> main 
 ghci> <default.nix file contents>
