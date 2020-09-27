@@ -244,7 +244,7 @@ main :: IO ()
 main = print =<< runIdentityT (runStateT (runReaderT (runFileReader fileReader) "default.nix") 0)
 
 ghci> main 
-ghci> <default.nix file contents>
+ghci> (<default.nix file contents>, line counter)
 ```
 ___
 

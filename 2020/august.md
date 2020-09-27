@@ -101,6 +101,7 @@ newtype Zalupa value = MkZalupa { runZalupa :: String -> Either Int value }
         deriving (Functor, Applicative) via (->) String `Compose` Either Int
 ```
 > NOTE: maybe there is a way to derive `Monad` instances via `Control.Monad.Trans.Compose.ComposeT`. I am 99% sure that it is the thing. It is just that I am too lazy to check this at the moment.
+> UPD: Yes, there is. I've wrote it [here](https://github.com/Radicalautistt/haskell-learning-log/blob/master/2020/september.md#date-2020-09-27)
 ___
 
 ### Control.Monad.guard 

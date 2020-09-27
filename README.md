@@ -1,2 +1,2 @@
 # haskell-learning-log
-Collection of notes I'am continuously taking while learning Haskell.
+Collection of notes I'm continuously taking while learning Haskell.
