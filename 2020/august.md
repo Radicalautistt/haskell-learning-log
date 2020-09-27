@@ -1,4 +1,5 @@
 # `August`
+___
 
 ----
 date: 2020-08-19
@@ -27,6 +28,7 @@ printWText (MkWText text) = Text.putStrLn text
 main :: IO ()
 main = printWText "zalupa kentavra"
 ```
+___
 
 ----
 date: 2020-08-20
@@ -62,6 +64,7 @@ concat <$> sequence [
 ghci> MkGameState True False [] False ^. sound
 ghci> True
 ```
+___
 
 ### One can fold the list (or other `Foldable`) with lenses and some monoid.
 ```haskell
@@ -77,6 +80,7 @@ ghci> 3
 ghci> fromList [("abc", 1), ("def", 2), ("ghi", 3)] ^. folded . _Unwrapping Sum
 ghci> Sum { getSum = 6 }
 ```
+___
 
 ----
 date: 2020-08-28
@@ -97,6 +101,7 @@ newtype Zalupa value = MkZalupa { runZalupa :: String -> Either Int value }
         deriving (Functor, Applicative) via (->) String `Compose` Either Int
 ```
 > NOTE: maybe there is a way to derive `Monad` instances via `Control.Monad.Trans.Compose.ComposeT`. I am 99% sure that it is the thing. It is just that I am too lazy to check this at the moment.
+___
 
 ### Control.Monad.guard 
 ```haskell
@@ -124,6 +129,7 @@ ghci> Just 2
 ghci> safeDiv 4 0
 ghci> Nothing
 ```
+___
 
 ----
 date: 2020-08-29
@@ -137,3 +143,4 @@ isFoo :: Foo -> Bool
 isFoo Foo {} = True
 isFoo _ = False
 ```
+___
