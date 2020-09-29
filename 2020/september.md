@@ -311,7 +311,7 @@ ghci> [("Abc", 1), ("def", 2), ("ghi", 3)]
 ```
 ___
 
-### One can use fmap for any type with kind (Type -> Type) with the help of `Template Haskell`
+### One can use fmap (without `Functor` instance) for any type of kind (Type -> Type) with the help of `Template Haskell`
 ```haskell
 {-# Language TemplateHaskell #-}
 
@@ -322,6 +322,7 @@ import Language.Haskell.TH (Q, Exp)
 newtype Wrapper value = MkWrapper value deriving Show
 
 -- | To actually use this function one is obligated to either import it or load this module into ghci.
+-- | Because template haskell function should be compiled before use.
 fmapWrapper :: Q Exp
 fmapWrapper =  makeFmap ''Wrapper
 
@@ -336,3 +337,17 @@ ghci> MkWrapper "ABCDEF"
 -- |  MkWrapper (MkWrapper value)
 ```
 ___
+
+### Utilization of `(->)` `Monad` instance
+```haskell 
+data Unit = MkUnit { hp :: Int, position :: (Double, Double) } deriving Show
+
+moveUnit :: Double -> Unit -> Unit 
+moveUnit distance = do
+  health <- hp
+  (x, y) <- position
+  pure (MkUnit health (x + distance, y - distance))
+
+ghci> moveUnit 10 (MkUnit 20 (0, 10))
+ghci> MkUnit {hp = 20, position = (10.0, 0.0)}
+```
