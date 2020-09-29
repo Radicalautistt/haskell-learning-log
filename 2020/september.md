@@ -276,13 +276,13 @@ ___
 date: 2020-09-29
 ---
 
-### Handy unwrapping of asoociated list of newtypes with `Data.Coerce.coerce`
+### Handy unwrapping of associated list of newtypes with `Data.Coerce.coerce`
 ```haskell 
 ghci> import Data.Functor.Identity
 ghci> foo = [(Identity "abc", 1), (Identity "def", 2), (Identity "ghi", 3)]
 -- |  Instead of mapping foo with something like:
 ghci> f = map $ \ (Identity key, Identity value) -> (key, value)
--- |  We can simply coerce it into the associated list of values that are contained within the newtypes
+-- |  We can simply coerce it into an associated list of values that are contained within the newtypes
 ghci> import Data.Coerce
 ghci> :set -XTypeApplications
 ghci> coerce @_ @[(String, Integer)] foo
@@ -308,5 +308,31 @@ ghci> newtype ZhopaKita value = ZhopaKita value deriving Show
 ghci> bar = [(ZhopaKita "Abc", ZhopaKita 1), (ZhopaKita "def", ZhopaKita 2), (ZhopaKita "ghi", ZhopaKita 3)]
 ghci> unwrapAList bar 
 ghci> [("Abc", 1), ("def", 2), ("ghi", 3)]
+```
+___
+
+### One can use fmap for any type with kind (Type -> Type) with the help of `Template Haskell`
+```haskell
+{-# Language TemplateHaskell #-}
+
+-- | https://hackage.haskell.org/package/deriving-compat-0.5/docs/Data-Functor-Deriving.html#v:makeFmap
+import Data.Functor.Deriving (makeFmap)
+import Language.Haskell.TH (Q, Exp)
+
+newtype Wrapper value = MkWrapper value deriving Show
+
+-- | To actually use this function one is obligated to either import it or load this module into ghci.
+fmapWrapper :: Q Exp
+fmapWrapper =  makeFmap ''Wrapper
+
+ghci> $fmapWrapper succ (MkWrapper 10)
+ghci> MkWrapper 11
+
+ghci> import Data.Char
+ghci> $fmapWrapper (fmap toUpper) (MkWrapper "abcdef")
+ghci> MkWrapper "ABCDEF"
+-- |  One can't use nested $fmapWrapper for cases where Wrapper contains some arbitrary Functor
+-- ,  because $fmapWrapper is monomorphic, hence it expects nested Wrapper values to be of the form:
+-- |  MkWrapper (MkWrapper value)
 ```
 ___
