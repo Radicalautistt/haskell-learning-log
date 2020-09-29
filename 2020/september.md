@@ -271,3 +271,42 @@ import Project.Exports (StateT (..), MonadReader (..), void)
 -}
 ```
 ___
+
+---
+date: 2020-09-29
+---
+
+### Handy unwrapping of asoociated list of newtypes with `Data.Coerce.coerce`
+```haskell 
+ghci> import Data.Functor.Identity
+ghci> foo = [(Identity "abc", 1), (Identity "def", 2), (Identity "ghi", 3)]
+-- |  Instead of mapping foo with something like:
+ghci> f = map $ \ (Identity key, Identity value) -> (key, value)
+-- |  We can simply coerce it into the associated list of values that are contained within the newtypes
+ghci> import Data.Coerce
+ghci> :set -XTypeApplications
+ghci> coerce @_ @[(String, Integer)] foo
+-- |  Type inference can figure out the first type application, so we can ommit it
+ghci> [("abc", 1), ("def", 2), ("ghi", 3)]
+
+-- | Haskell file.
+{-# Language ScopedTypeVariables #-}
+
+import Data.Coerce (Coercible, coerce)
+
+-- | We can generalize this approach thusly: 
+unwrapAList :: forall wrapper key value .
+               Coercible (wrapper key) key => 
+               Coercible (wrapper value) value => [(wrapper key, wrapper value)] -> [(key, value)]
+unwrapAList =  coerce @_ @[(key, value)]
+
+------------------
+
+ghci> unwrapAList foo
+ghci> [("abc", 1), ("def", 2), ("ghi", 3)]
+ghci> newtype ZhopaKita value = ZhopaKita value deriving Show
+ghci> bar = [(ZhopaKita "Abc", ZhopaKita 1), (ZhopaKita "def", ZhopaKita 2), (ZhopaKita "ghi", ZhopaKita 3)]
+ghci> unwrapAList bar 
+ghci> [("Abc", 1), ("def", 2), ("ghi", 3)]
+```
+___
