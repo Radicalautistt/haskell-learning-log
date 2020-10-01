@@ -78,9 +78,11 @@ import Control.Monad.IO.Class (MonadIO (..))
 import Control.Monad.Reader (MonadReader (..), ReaderT (..))
 import Control.Monad.State.Strict (MonadState (..), StateT (..), evalStateT)
 
-newtype GameT gameState monad result = MkGameT { runGameT :: ReaderT Double (StateT gameState monad) result }
+newtype Timer = MkTimer Double deriving newtype (Num, Eq, Ord)
+
+newtype GameT gameState monad result = MkGameT { runGameT :: ReaderT Timer (StateT gameState monad) result }
         deriving newtype (Functor, Applicative, Monad
-                        , MonadIO, MonadReader Double
+                        , MonadIO, MonadReader Timer
                         , MonadState gameState)
 
 type instance Zoomed (GameT gameState monad) = Zoomed (ReaderT Double (StateT gameState monad))
@@ -88,13 +90,13 @@ instance Monad monad => Zoom (GameT gameState monad) (GameT newGameState monad) 
          zoom _lens (MkGameT _game) = MkGameT (zoom _lens _game)
 
 data Unit = MkUnit { hp :: Int, position :: (Double, Double) } deriving stock (Show, Generic)
-data GameState = MkGameState { units :: [Unit], timer :: Double } deriving stock Generic
+data GameState = MkGameState { units :: [Unit], timer :: Timer } deriving stock Generic
 
 type Game result = GameT GameState IO result
 
 initializeGame :: Game ()
 initializeGame =  do
-  _timer <- ask @Double
+  _timer <- ask @Timer
   let unit = MkUnit 20 (10, 20)
   #units .= replicate 20 unit
   #timer .= _timer
@@ -117,7 +119,7 @@ moveUnits distanceX distanceY = zoom (#units . each . #position) do
     _2 += distanceY
 
 decrementTime :: Double -> Game ()
-decrementTime deltaTime = #timer -= deltaTime
+decrementTime deltaTime = #timer -= MkTimer deltaTime
 
 -- | Best imperative language for you
 gameLoop :: Game ()
