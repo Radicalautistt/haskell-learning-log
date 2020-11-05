@@ -85,7 +85,7 @@ newtype GameT gameState monad result = MkGameT { runGameT :: ReaderT Timer (Stat
                         , MonadIO, MonadReader Timer
                         , MonadState gameState)
 
-type instance Zoomed (GameT gameState monad) = Zoomed (ReaderT Double (StateT gameState monad))
+type instance Zoomed (GameT gameState monad) = Zoomed (ReaderT Timer (StateT gameState monad))
 instance Monad monad => Zoom (GameT gameState monad) (GameT newGameState monad) gameState newGameState where
          zoom _lens (MkGameT _game) = MkGameT (zoom _lens _game)
 
@@ -140,5 +140,6 @@ game =  initializeGame *> gameLoop
 main :: IO ()
 main =  evalStateT (runReaderT (runGameT game) 10) initialGameState
 
-ghci> ugly printing of a list of units every second until the given timer is up, no one needs to see this
+ghci> main
+... ugly printing of a list of units every second until the given timer is up, no one needs to see this
 ```
