@@ -172,7 +172,7 @@ ___
 date: 2020-09-20
 ----
 
-### Chain multiple set actions with `Control.Lens.&~` and `State` monad
+### Chain multiple set/modify actions with `Control.Lens.&~` and `State` monad
 ```haskell
 {-# Language DeriveGeneric #-}
 {-# Language OverloadedLabels #-}
@@ -276,7 +276,7 @@ ___
 date: 2020-09-29
 ---
 
-### Handy unwrapping of associated list of newtypes with `Data.Coerce.coerce`
+### Handy unwrapping of an associated list of newtypes with `Data.Coerce.coerce`
 ```haskell 
 ghci> import Data.Functor.Identity
 ghci> foo = [(Identity "abc", 1), (Identity "def", 2), (Identity "ghi", 3)]

@@ -43,3 +43,36 @@ ghci> 1 :< Just (2 :< Just (3 :< Just (4 :< ...)))
 
 ### in duckduckgo, `!h <query>` command could be used to search anything on hoogle.
 ---
+
+---
+date: 2020-11-06
+---
+### Generate lenses in ghci.
+```haskell
+ghci> :set -XTemplateHaskell
+ghci> import Control.Lens (makeLenses, (.~), (&))
+ghci> data ZhopaKita = MkZhopaKita { _zalupa :: String, _kentavra :: Int } deriving Show
+ghci> data X; makeLenses ''ZhopaKita
+ghci> zhopaKita = MkZhopaKita "zalupa" 1
+ghci> zhopaKita & zalupa .~ "ukraine"
+ghci> MkZalupaKentavra {_zalupa = "ukraine", _kentavra = 1}
+```
+---
+
+---
+date: 2020-11-12
+---
+### Utilizing `Semigroup's` `(->)` instance 
+```haskell
+-- | Move n values to the end of a list
+rotate :: Int -> [value] -> [value]
+rotate = drop <> take
+-- | rotate times = drop times <> take times 
+-- | rotate times list = drop times list <> take times list
+
+-- | Entire explanation could be found at: https://stackoverflow.com/questions/16378773/rotate-a-list-in-haskell (4th answer)
+ghci> rotate 2 [1..10]
+ghci> [3, 4, 5, 6, 7, 8, 9, 10, 1, 2]
+```
+
+
