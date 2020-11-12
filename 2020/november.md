@@ -62,7 +62,7 @@ ghci> MkZalupaKentavra {_zalupa = "ukraine", _kentavra = 1}
 ---
 date: 2020-11-12
 ---
-### Utilizing `Semigroup's` `(->)` instance 
+### Utilizing `Semigroup's` `(->)` [instance](https://github.com/Radicalautistt/haskell-learning-log/blob/master/2020/september.md#functional-arrow-a---b-is-a-semigroup-instance)
 ```haskell
 -- | Move n values to the end of a list
 rotate :: Int -> [value] -> [value]
