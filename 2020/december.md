@@ -36,7 +36,7 @@ data Anime = MkAnime {
 -- | So, the only option we are seemingly left with is to write 
 -- | a trivial and boilerplate FromJSON instance. 
 -- | It's ok if we need to do this for several types, even if they have 10-20 fields.
--- | But if we want to support the entire myanimelist API it would be very tedious
+-- | But if we want to support the entire myanimelist API it would be extremely tedious
 -- | to write those instances for, say, 30 records with 10-20 fields each.
 -- | Thus, deriving-aeson (not to confuse with aeson-deriving (yep, haskell's ecosystem for you)) comes to resque with its CustomJSON newtype.
 -- | Our goal is to drop this 'anime' prefix and convert everything to snake case, which is easily doable at this point.
@@ -64,6 +64,33 @@ testAnime = " { \
    \ \"opening_themes\": [\"Boa - Duvet\"] \
    \ } "
 
-ghci> Aeson.eitherDecodeStrict' testAnime
+ghci> Aeson.eitherDecodeStrict' @Anime testAnime
 ghci> Right (MkAnime {animeTitle = "Serial Experiments Lain", animeScore = 8.02, animeEpisodes = 13, animeOpeningThemes = ["Boa - Duvet"]})
+```
+---
+
+---
+date: 2020-12-15
+---
+
+### Using `GenericSemigroupMonoid` from `semigroups` package to derive `Monoid` and `Semigroup` instances
+### for some record, where all of the fields are `Semigroups`/`Monoids`.
+```haskell
+{-# Language DerivingVia #-}
+{-# Language DeriveGeneric #-}
+
+import GHC.Generics (Generic)
+import Data.Semigroup.Generic (GenericSemigroupMonoid (..))
+import Data.Map.Strict (Map)
+import Data.Semigroup (Sum (..))
+
+data Unit = Unit
+data Room = Room
+
+data GameState = MkGameState {
+  time :: Sum Double
+  , aliveUnits :: [Unit]
+  , availableRooms :: Map String Room
+} deriving Generic
+  deriving (Semigroup, Monoid) via GenericSemigroupMonoid GameState
 ```
