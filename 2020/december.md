@@ -73,8 +73,7 @@ ghci> Right (MkAnime {animeTitle = "Serial Experiments Lain", animeScore = 8.02,
 date: 2020-12-15
 ---
 
-### Using `GenericSemigroupMonoid` from `semigroups` package to derive `Monoid` and `Semigroup` instances
-### for some record, where all of the fields are `Semigroups`/`Monoids`.
+### Using `GenericSemigroupMonoid` from `semigroups` package to derive `Monoid` and `Semigroup` instances for some record, where all of the fields are `Semigroups`/`Monoids`.
 ```haskell
 {-# Language DerivingVia #-}
 {-# Language DeriveGeneric #-}
